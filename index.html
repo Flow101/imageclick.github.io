@@ -1,0 +1,86 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Untitled Document</title>
+	<style>
+.dot {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: red;
+  display: block;
+}
+
+</style>
+</head>
+
+<body>
+	<canvas id="canvas" width="689" height="192" style="border:1px solid #000000;"></canvas><br/>
+	<button id="playback">Start Playback</button>
+<button id="clearDots">Clear Dots</button>
+
+
+	  <script>
+let canvas = document.getElementById('canvas');
+let ctx = canvas.getContext('2d');
+		  loadImage();
+let clicks = [];
+let playbackIndex = 0;
+let playbackInterval;
+canvas.addEventListener('click', function(event) {
+    let rect = canvas.getBoundingClientRect();
+    let x = event.clientX - rect.left;
+    let y = event.clientY - rect.top;
+    clicks.push({x: x, y: y});
+    // Draw a red dot immediately
+    drawDot(x, y);
+});
+document.getElementById('playback').addEventListener('click', function() {
+    playbackIndex = 0;
+    playbackInterval = setInterval(playback, 1000);
+});
+		  
+		  document.getElementById('clearDots').addEventListener('click', function() {
+   ctx.clearRect(0, 0, canvas.width, canvas.height);
+			  loadImage();
+});
+
+function drawDot(x, y) {
+    ctx.beginPath();
+    ctx.arc(x, y, 10, 0, 2 * Math.PI, false);
+    ctx.fillStyle = 'red';
+    ctx.fill();
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = '#003300';
+    ctx.stroke();
+}
+function playback() {
+	
+	
+    if (playbackIndex >= clicks.length) {
+        clearInterval(playbackInterval);
+        return;
+    }
+    let click = clicks[playbackIndex];
+    drawDot(click.x, click.y);
+    playbackIndex++;
+}
+		
+		  function loadImage(){
+			  // Create an image object and load the image source.
+const image = new Image();
+image.onload = function() {
+  // Draw the image onto the canvas.
+  ctx.drawImage(image, 0, 0);
+
+  // Set the canvas element's src attribute to the canvas's data URL.
+  canvas.src = canvas.toDataURL();
+};
+image.src = 'impath_logo.png';
+		  }
+      </script>
+</p>
+</body>
+</html>
